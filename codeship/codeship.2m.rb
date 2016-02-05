@@ -13,6 +13,8 @@ CODESHIP_PROJECT_ID=''
 
 CODESHIP_BASE_URL = 'https://codeship.com'
 CODESHIP_PROJECTS_API = "#{CODESHIP_BASE_URL}/api/v1/projects/#{CODESHIP_PROJECT_ID}.json?api_key=#{CODESHIP_ACCESS_TOKEN}"
+CODESHIP_BUILDS_API = "#{CODESHIP_BASE_URL}/api/v1/builds.json?api_key=#{CODESHIP_ACCESS_TOKEN}&project_id=#{CODESHIP_PROJECT_ID}"
+
 CODESHIP_BUILD_URL = "#{CODESHIP_BASE_URL}/projects/#{CODESHIP_PROJECT_ID}/builds/"
 
 LINE_SEPERATOR = 'ꞁ'
@@ -28,7 +30,7 @@ STATUS_COLORS = { SUCCESS => '#60CC69', WAITING => '#5A95E5', TESTING => '#5A95E
 STATUS_ICON = { SUCCESS => '✔', WAITING => '⌛', TESTING => '⟳', ERROR => '✗', STOPPED => '◼' }
 
 def get_builds
-  response = Net::HTTP.get_response(URI.parse(CODESHIP_PROJECTS_API))
+  response = Net::HTTP.get_response(URI.parse(CODESHIP_BUILDS_API))
   data = JSON.parse(response.body)
   data['builds']
 end
