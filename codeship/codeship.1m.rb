@@ -22,9 +22,10 @@ SUCCESS = 'success'
 WAITING = 'waiting'
 TESTING = 'testing'
 ERROR = 'error'
-STATUSES = [ERROR, SUCCESS, TESTING, WAITING]
-STATUS_COLORS = { SUCCESS => '#60CC69', WAITING => '#5A95E5', TESTING => '#5A95E5', ERROR => '#FE402C' }
-STATUS_ICON = { SUCCESS => '✔', WAITING => '⌛', TESTING => '⟳', ERROR => '✗' }
+STOPPED = 'stopped'
+STATUSES = [ERROR, SUCCESS, TESTING, WAITING, STOPPED]
+STATUS_COLORS = { SUCCESS => '#60CC69', WAITING => '#5A95E5', TESTING => '#5A95E5', ERROR => '#FE402C', STOPPED => '#CEDBED' }
+STATUS_ICON = { SUCCESS => '✔', WAITING => '⌛', TESTING => '⟳', ERROR => '✗', STOPPED => '◼' }
 
 def get_builds
   response = Net::HTTP.get_response(URI.parse(CODESHIP_PROJECTS_API))
