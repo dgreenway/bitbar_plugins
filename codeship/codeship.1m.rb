@@ -22,6 +22,7 @@ SUCCESS = 'success'
 WAITING = 'waiting'
 TESTING = 'testing'
 ERROR = 'error'
+STATUSES = [ERROR, SUCCESS, TESTING, WAITING]
 STATUS_COLORS = { SUCCESS => '#60CC69', WAITING => '#5A95E5', TESTING => '#5A95E5', ERROR => '#FE402C' }
 STATUS_ICON = { SUCCESS => '✔', WAITING => '⌛', TESTING => '⟳', ERROR => '✗' }
 
@@ -49,7 +50,12 @@ def overall_status(data_list)
   if data_list.any?{ |data| data['status'] != SUCCESS}
     status_parts = Hash.new(0)
     data_list.each{ |data| status_parts[data['status']] += 1 }
-    status = "#{status_parts[ERROR]}E #{status_parts[SUCCESS]}S #{status_parts[WAITING] + status_parts[TESTING]}IP"
+    output = []
+    STATUSES.each do |status|
+    	count = status_parts[status]
+    	output << "#{count}#{STATUS_ICON[status]}" if count > 0
+    end
+    status = output.join(' ')
   end
   puts "#{ANCHOR} #{status}"
 end
