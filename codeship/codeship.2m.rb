@@ -51,7 +51,9 @@ def format_output(data_list)
     short_message = data['message']
     short_message = "#{short_message[0..27]}..." if short_message.size >= 30
     parts = [data['github_username'] || '???', data['branch'] || '??? branch ???', short_message]
-    puts "#{STATUS_ICON[data['status']]} #{parts.join(" #{LINE_SEPERATOR} ")} | color=#{STATUS_COLORS[data['status']]} href=#{CODESHIP_BUILD_URL}#{data['id']}"
+    parts = "#{STATUS_ICON[data['status']]} #{parts.join(" #{LINE_SEPERATOR} ")} | color=#{STATUS_COLORS[data['status']]} href=#{CODESHIP_BUILD_URL}#{data['id']}"
+    parts = "#{YOUR_BUILD_INDICATOR}#{parts}" if GITHUB_ACCOUNT != '' && data['github_username'] == GITHUB_ACCOUNT
+    puts parts
   end
 end
 
