@@ -46,13 +46,18 @@ def get_builds
   data['builds']
 end
 
+def ownership_indicator(build_initiator)
+	return unless GITHUB_ACCOUNT != ''
+    is_own_build = build_initiator == GITHUB_ACCOUNT
+    return is_own_build ? YOUR_BUILD_INDICATOR : "\UFFC3"
+end
+
 def format_output(data_list)
   data_list.each do |data|
     short_message = data['message']
     short_message = "#{short_message[0..27]}..." if short_message.size >= 30
     parts = [data['github_username'] || '???', data['branch'] || '??? branch ???', short_message]
-    parts = "#{STATUS_ICON[data['status']]} #{parts.join(" #{LINE_SEPERATOR} ")} | color=#{STATUS_COLORS[data['status']]} href=#{CODESHIP_BUILD_URL}#{data['id']}"
-    parts = "#{YOUR_BUILD_INDICATOR}#{parts}" if GITHUB_ACCOUNT != '' && data['github_username'] == GITHUB_ACCOUNT
+    parts = "#{STATUS_ICON[data['status']]} #{ownership_indicator(data['github_username'])} #{parts.join(" #{LINE_SEPERATOR} ")} | color=#{STATUS_COLORS[data['status']]} href=#{CODESHIP_BUILD_URL}#{data['id']}"
     puts parts
   end
 end
