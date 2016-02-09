@@ -112,8 +112,9 @@ def projects_info
 end
 
 def projects
-  projects_info.select!{ |p| p[:id] == CODESHIP_PROJECT_ID } if CODESHIP_PROJECT_ID != ''
-  projects_info
+  all_projects = projects_info
+  all_projects = all_projects.select{ |p| p[:id] == CODESHIP_PROJECT_ID.to_i } if CODESHIP_PROJECT_ID != ''
+  all_projects
 end
 
 begin
