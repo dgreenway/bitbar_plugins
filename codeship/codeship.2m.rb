@@ -56,7 +56,7 @@ end
 def ownership_indicator(build_initiator)
 	return unless GITHUB_ACCOUNT != ''
     is_own_build = build_initiator == GITHUB_ACCOUNT
-    return is_own_build ? YOUR_BUILD_INDICATOR : "\UFFC3"
+    return is_own_build ? YOUR_BUILD_INDICATOR : '   '
 end
 
 def project_color(name)
