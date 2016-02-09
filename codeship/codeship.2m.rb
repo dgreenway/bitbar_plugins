@@ -28,10 +28,7 @@ GITHUB_ACCOUNT = ''
 
 CODESHIP_BASE_URL = 'https://codeship.com'
 CODESHIP_ALL_PROJECTS_API = "#{CODESHIP_BASE_URL}/api/v1/projects.json?api_key=#{CODESHIP_ACCESS_TOKEN}"
-CODESHIP_SINGLE_PROJECT_API = "#{CODESHIP_BASE_URL}/api/v1/projects/#{CODESHIP_PROJECT_ID}.json?api_key=#{CODESHIP_ACCESS_TOKEN}"
 CODESHIP_BUILDS_API = "#{CODESHIP_BASE_URL}/api/v1/builds.json?api_key=#{CODESHIP_ACCESS_TOKEN}&project_id="
-
-CODESHIP_BUILD_URL = "#{CODESHIP_BASE_URL}/projects/#{CODESHIP_PROJECT_ID}/builds/"
 
 LINE_SEPERATOR = 'ꞁ'
 ANCHOR = '⚓'
@@ -70,13 +67,17 @@ def project_color(name)
   "\##{r}#{g}#{b}"
 end
 
+def build_url(project, build_id)
+  "#{CODESHIP_BASE_URL}/projects/#{project[:id]}/builds/#{build_id}"
+end
+
 def format_output(project, data_list)
   puts "Project #{project[:name]} | color=#{project_color(project[:name])} size=18"
   data_list[project[:id]].each do |data|
     short_message = data['message']
     short_message = "#{short_message[0..27]}..." if short_message.size >= 30
     parts = [data['github_username'] || '???', data['branch'] || '??? branch ???', short_message]
-    parts = "#{STATUS_ICON[data['status']]} #{ownership_indicator(data['github_username'])} #{parts.join(" #{LINE_SEPERATOR} ")} | color=#{STATUS_COLORS[data['status']]} href=#{CODESHIP_BUILD_URL}#{data['id']}"
+    parts = "#{STATUS_ICON[data['status']]} #{ownership_indicator(data['github_username'])} #{parts.join(" #{LINE_SEPERATOR} ")} | color=#{STATUS_COLORS[data['status']]} href=#{build_url(project, data['id'])}"
     puts parts
   end
 end
