@@ -25,8 +25,30 @@ HONEYBADGER_BASE_URL = 'https://app.honeybadger.io'
 HONEYBADGER_FAULTS_API = "#{HONEYBADGER_BASE_URL}/v1/projects/#{HONEYBADGER_PROJECT_ID}/faults?auth_token=#{HONEYBADGER_ACCESS_TOKEN}&resolved=f&ignored=f&order=frequent"
 HONEYBADGER_FAULT_URI = "#{HONEYBADGER_BASE_URL}/v1/projects/#{HONEYBADGER_PROJECT_ID}/faults/FAULT_ID?auth_token=#{HONEYBADGER_ACCESS_TOKEN}"
 
+def fault_info
+  response = Net::HTTP.get_response(URI.parse(HONEYBADGER_FAULTS_API))
+  JSON.parse(response.body)['results']
+end
 
+def format_output(fault)
+  puts "Fault #{fault['klass']}  #{fault['component']}/##{fault['action']} | size=12"
+  puts "#{fault['message']} | size=10"
+end
+
+
+def separator
+  puts '---'
+end
+
+def overall_status(fault_list)
+  puts"#{fault_list.size} Issues"
+end
 
 begin
-
+  faults = fault_info
+  overall_status(faults)
+  separator
+  faults.each do |fault|
+    format_output(fault)
+  end
 end
