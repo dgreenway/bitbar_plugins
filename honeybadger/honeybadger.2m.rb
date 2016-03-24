@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # <bitbar.title>Honeybadger Fault Monitor</bitbar.title>
-# <bitbar.version>v1.0</bitbar.version>
+# <bitbar.version>v1.1</bitbar.version>
 # <bitbar.author>Greg Fox</bitbar.author>
 # <bitbar.author.github>greg-fox</bitbar.author.github>
 # <bitbar.desc>Watches for faults in Honeybadger.</bitbar.desc>
