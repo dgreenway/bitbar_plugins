@@ -39,7 +39,9 @@ end
 
 def format_output(fault)
   fault_link = HONEYBADGER_FAULT_URI.gsub('FAULT_ID', fault['id'].to_s)
-  puts "Fault #{fault['klass']}  #{fault['component']}/##{fault['action']} | size=12 href=#{fault_link} color=red\n #{fault['message']} | size=10 color=green"
+  puts "Fault #{fault['klass']}  #{fault['component']}/##{fault['action']} | size=12 href=#{fault_link} color=red"
+  puts "Instance Count: #{fault['notices_count']} | size=12 href=#{fault_link} color=red"
+  puts "#{fault['message']} | size=10 color=green"
 
   format_tickets(fault)
   separator
