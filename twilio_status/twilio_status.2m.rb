@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # <bitbar.title>Twilio Issue Monitor</bitbar.title>
-# <bitbar.version>v1.0</bitbar.version>
+# <bitbar.version>v1.1</bitbar.version>
 # <bitbar.author>Greg Fox</bitbar.author>
 # <bitbar.author.github>greg-fox</bitbar.author.github>
 # <bitbar.desc>Watches for issue reports from Twilio.</bitbar.desc>
@@ -28,10 +28,34 @@ def format_output(incident)
   status = incident['status']
   color = status == 'resolved' ? 'green' : 'red'
   color = status == 'resolved' ? nil : 'color=red'
-  size = status == 'resolved' ? 'size=10' : 'size=15'
+  size = status == 'resolved' ? nil : 'size=15'
   puts "#{status} - #{incident['name']} | #{size} #{color} href=#{INCIDENT_BASE_URL}#{incident['id']}"
 
+  if incident['incident_updates'].size > 0
+    puts "#{incident['incident_updates'].size} Updates"
+    show_incident_updates(incident)
+  end
   separator
+end
+
+def show_incident_updates(incident)
+  return if incident['incident_updates'].size == 0
+
+  incident['incident_updates']. each do |update|
+    update_body = update['body'].gsub(/\r/," ").gsub(/\n/," ")
+    puts "--#{update['status']}-#{update_body} | color=#{status_color(update['status'])}"
+  end
+end
+
+def status_color(status)
+  case status
+  when 'resolved'
+    'green'
+  when 'monitoring', 'investigating', 'identified'
+    'yellow'
+  else
+    'red'
+  end
 end
 
 def separator
