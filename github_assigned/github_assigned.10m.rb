@@ -6,8 +6,9 @@
 # <bitbar.author.github>greg-fox</bitbar.author.github>
 # <bitbar.desc>Watches for assigned PRs in Github.</bitbar.desc>
 # <bitbar.dependencies>ruby</bitbar.dependencies>
-
+# <bitbar.dependencies>sudo gem install -i /Library/Ruby/Gems/2.0.0/ octokit</bitbar.dependencies>
 require 'octokit'
+require 'sawyer'
 require 'byebug'
 
 
