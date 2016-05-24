@@ -21,12 +21,14 @@ USER_NAMES = ''
 # </bitbar.settings>
 
 @client = Octokit::Client.new(access_token: API_TOKEN)
+@project_links = {}
 
 def pr_info
   pr_hash = {}
   REPOSITORY.split(',').each do |repo_name|
     opened_prs = []
     repo = @client.repository(repo_name)
+    @project_links[repo_name] = "#{repo.html_url}/pulls/assigned/#{USER_NAME}"
 
     pages = (repo[:open_issues] / 30.0).ceil
     (1..pages).each do |page|
@@ -41,7 +43,7 @@ end
 def filter_assigned_prs(open_pr_hash)
   assigned_pr_hash = {}
   open_pr_hash.each do |repo_name, open_prs|
-    assigned_prs = open_prs.select{ |pr| USER_NAMES.split(',').include?(pr[:assignee][:login]) if pr[:assignee] }
+    assigned_prs = open_prs.select{ |pr| USER_NAME.include?(pr[:assignee][:login]) if pr[:assignee] }
     assigned_pr_hash[repo_name] = assigned_prs
   end
   assigned_pr_hash
@@ -50,6 +52,13 @@ end
 def separator
   puts '---'
 end
+
+def format_repo_links
+  puts 'Assigned PRs'
+  @project_links.map do |repo_name, link|
+    puts "--#{repo_name} | href=#{link}"
+  end
+end 
 
 def overall_status(assigned_hash)
   count = 0
@@ -61,7 +70,7 @@ end
 
 def format_pr(repo_name, pr)
   p = @client.pull_request(repo_name, pr[:number])
-  link = p[:url]
+  link = p[:html_url]
   title = p[:title]
   puts "#{repo_name} - #{title} | href=#{link}"
 end
@@ -71,7 +80,8 @@ begin
   assigned_prs = filter_assigned_prs(open_prs)
   overall_status(assigned_prs)
   separator
-
+  
+  format_repo_links
   assigned_prs.each do |repo_name, assigned_list|
     assigned_list.each do |pr|
     format_pr(repo_name, pr)
